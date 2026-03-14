@@ -60,9 +60,11 @@
         }
 
         /* Estilização para tabelas dentro dos avisos */
-        .aviso-content table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 0.5rem; }
+        .aviso-content { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+        .aviso-content table { min-width: 280px; width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 0.5rem; }
         .aviso-content th, .aviso-content td { border: 1px solid #e5e7eb; padding: 4px 8px; text-align: left; }
-        .aviso-content th { background: #f9fafb; font-weight: 600; }
+        .aviso-content th { background: #f9fafb; font-weight: 600; white-space: nowrap; }
+        .aviso-content td { white-space: nowrap; }
         
         @media (min-width: 768px) {
             .timeline-line::before {
@@ -85,6 +87,7 @@
                 <div class="hidden md:flex space-x-8">
                     <a href="#dashboard" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Início</a>
                     <a href="#interno" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Área do Interno</a>
+                    <a href="#cronograma" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Cronograma</a>
                     <a href="#avisos" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Avisos</a>
                 </div>
                 <!-- Mobile menu button -->
@@ -100,33 +103,34 @@
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Início</a>
                 <a href="#interno" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Área do Interno</a>
+                <a href="#cronograma" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Cronograma</a>
                 <a href="#avisos" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Avisos</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section with Countdown -->
-    <section id="dashboard" class="hero-pattern text-white pt-24 pb-16 lg:pt-32 lg:pb-24 rounded-b-[3rem] shadow-xl relative overflow-hidden">
+    <section id="dashboard" class="hero-pattern text-white pt-24 pb-16 lg:pt-32 lg:pb-24 rounded-b-[2rem] md:rounded-b-[3rem] shadow-xl relative overflow-hidden">
         <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-5 blur-3xl"></div>
         <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-yellow-400 opacity-5 blur-3xl"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <span class="bg-white/20 backdrop-blur-md text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase mb-4 inline-block border border-white/30">Reta Final</span>
-            <h1 class="text-4xl md:text-5xl font-serif font-bold mb-6">Contagem Regressiva</h1>
-            <p class="text-red-100 max-w-2xl mx-auto mb-10 text-lg">"O sucesso é a soma de pequenos esforços repetidos dia após dia."</p>
+            <h1 class="text-3xl md:text-5xl font-serif font-bold mb-6 px-4">Contagem Regressiva</h1>
+            <p class="text-red-100 max-w-2xl mx-auto mb-10 text-base md:text-lg px-4 italic">"O sucesso é a soma de pequenos esforços repetidos dia após dia."</p>
 
             <!-- Countdown Timer -->
-            <div class="flex flex-wrap justify-center gap-4 md:gap-8 mb-10">
-                <div class="glass-effect bg-white/10 p-4 rounded-xl w-24 md:w-32 backdrop-blur-sm border border-white/20">
-                    <span id="days" class="block text-3xl md:text-5xl font-bold font-mono">00</span>
+            <div class="flex justify-center gap-2 md:gap-8 mb-10 px-2">
+                <div class="glass-effect bg-white/10 p-3 md:p-4 rounded-xl flex-1 max-w-[100px] md:max-w-[128px] backdrop-blur-sm border border-white/20">
+                    <span id="days" class="block text-2xl md:text-5xl font-bold font-mono">00</span>
                     <span class="text-xs md:text-sm uppercase tracking-wide opacity-80">Dias</span>
                 </div>
-                <div class="glass-effect bg-white/10 p-4 rounded-xl w-24 md:w-32 backdrop-blur-sm border border-white/20">
-                    <span id="hours" class="block text-3xl md:text-5xl font-bold font-mono">00</span>
+                <div class="glass-effect bg-white/10 p-3 md:p-4 rounded-xl flex-1 max-w-[100px] md:max-w-[128px] backdrop-blur-sm border border-white/20">
+                    <span id="hours" class="block text-2xl md:text-5xl font-bold font-mono">00</span>
                     <span class="text-xs md:text-sm uppercase tracking-wide opacity-80">Horas</span>
                 </div>
-                <div class="glass-effect bg-white/10 p-4 rounded-xl w-24 md:w-32 backdrop-blur-sm border border-white/20">
-                    <span id="minutes" class="block text-3xl md:text-5xl font-bold font-mono">00</span>
+                <div class="glass-effect bg-white/10 p-3 md:p-4 rounded-xl flex-1 max-w-[100px] md:max-w-[128px] backdrop-blur-sm border border-white/20">
+                    <span id="minutes" class="block text-2xl md:text-5xl font-bold font-mono">00</span>
                     <span class="text-xs md:text-sm uppercase tracking-wide opacity-80">Min</span>
                 </div>
             </div>
@@ -142,7 +146,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
         <!-- Shortcuts -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Card 1 -->
+            <!-- Card 1: Último Aviso -->
             <div id="card-ultimo-aviso" class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-camilo-primary cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center" onclick="window.location.href='#avisos'">
                 <div class="flex flex-col items-center mb-4">
                     <i class="fa-solid fa-bell text-camilo-primary/50 text-2xl mb-2"></i>
@@ -154,7 +158,7 @@
                 </div>
             </div>
 
-            <!-- Card 2 -->
+            <!-- Card 2: Financeiro -->
             <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600 cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center" onclick="window.open('https://sistema.kazformaturas.com.br/', '_blank')">
                 <div class="flex flex-col items-center mb-4">
                     <i class="fa-solid fa-wallet text-green-600/50 text-2xl mb-2"></i>
@@ -164,7 +168,7 @@
                 <p class="text-xs text-gray-500">Gestão de pagamentos e adesão</p>
             </div>
 
-            <!-- Card 3 -->
+            <!-- Card 3: Redes Sociais -->
             <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500 cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center" onclick="window.open('https://www.instagram.com/medscxxviii/', '_blank')">
                 <div class="flex flex-col items-center mb-4">
                     <i class="fa-brands fa-instagram text-purple-500/50 text-2xl mb-2"></i>
@@ -179,7 +183,7 @@
     </div>
 
     <!-- Main Content Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 space-y-16 md:space-y-20">
 
         <!-- SEÇÃO: ÁREA DO INTERNO -->
         <section id="interno">
@@ -239,6 +243,79 @@
             </div>
         </section>
 
+        <!-- SEÇÃO: CRONOGRAMA DE EVENTOS -->
+        <section id="cronograma" class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+            <div class="bg-gray-900 text-white p-6 text-center">
+                <h2 class="text-2xl md:text-3xl font-serif font-bold flex flex-col items-center">
+                    <i class="fa-solid fa-calendar-days text-camilo-secondary mb-2"></i> Cronograma de Eventos & Fotos
+                </h2>
+                <p class="text-gray-400 text-sm mt-1">Datas Oficiais Confirmadas</p>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold">
+                            <th class="p-4">Data</th>
+                            <th class="p-4">Horário</th>
+                            <th class="p-4">Evento</th>
+                            <th class="p-4">Local</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-medium">29/05/26 <span class="text-xs text-gray-400">(Sex)</span></td>
+                            <td class="p-4">08:00</td>
+                            <td class="p-4">Fotos Individuais</td>
+                            <td class="p-4 text-gray-500 italic">Palácio dos Cedros</td>
+                        </tr>
+                        <tr class="bg-red-50/50 hover:bg-red-50 transition">
+                            <td class="p-4 font-medium">29/05/26 <span class="text-xs text-gray-400">(Sex)</span></td>
+                            <td class="p-4">11:00</td>
+                            <td class="p-4 font-bold text-camilo-primary">Foto Oficial da Turma</td>
+                            <td class="p-4 text-gray-500 italic">Palácio dos Cedros</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-medium">29/05/26 <span class="text-xs text-gray-400">(Sex)</span></td>
+                            <td class="p-4">15:00</td>
+                            <td class="p-4">Fotos Organizações (Atlética, CA, DC)</td>
+                            <td class="p-4 text-gray-500 italic">Campus da SC</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-4 font-medium">30/05/26 <span class="text-xs text-gray-400">(Sáb)</span></td>
+                            <td class="p-4">08:00 - 18:00</td>
+                            <td class="p-4">Fotos: Família e Amigos</td>
+                            <td class="p-4 text-gray-500 italic">Campus da SC</td>
+                        </tr>
+                        <tr class="bg-yellow-50/40 hover:bg-yellow-100/60 transition border-l-4 border-camilo-secondary">
+                            <td class="p-4 font-medium">06/10/26 <span class="text-xs text-gray-400">(Ter)</span></td>
+                            <td class="p-4">18:30</td>
+                            <td class="p-4 font-bold">Colação de Grau</td>
+                            <td class="p-4 text-camilo-secondary font-medium italic">Sala São Paulo</td>
+                        </tr>
+                        <tr class="bg-yellow-50/40 hover:bg-yellow-100/60 transition border-l-4 border-camilo-secondary border-t border-yellow-100">
+                            <td class="p-4 font-medium">07/10/26 <span class="text-xs text-gray-400">(Qua)</span></td>
+                            <td class="p-4">14:00</td>
+                            <td class="p-4 font-bold">Culto Ecumênico</td>
+                            <td class="p-4 text-camilo-secondary font-medium italic">Catedral da Sé</td>
+                        </tr>
+                        <tr class="bg-yellow-50/40 hover:bg-yellow-100/60 transition border-l-4 border-camilo-secondary border-t border-yellow-100">
+                            <td class="p-4 font-medium">08/10/26 <span class="text-xs text-gray-400">(Qui)</span></td>
+                            <td class="p-4">21:00</td>
+                            <td class="p-4 font-bold">Jantar de Formatura</td>
+                            <td class="p-4 text-camilo-secondary font-medium italic">ProMagno</td>
+                        </tr>
+                        <tr class="bg-yellow-50/40 hover:bg-yellow-100/60 transition border-l-4 border-camilo-secondary border-t border-yellow-100">
+                            <td class="p-4 font-medium">10/10/26 <span class="text-xs text-gray-400">(Sáb)</span></td>
+                            <td class="p-4">22:00</td>
+                            <td class="p-4 font-bold">Baile de Formatura</td>
+                            <td class="p-4 text-camilo-secondary font-medium italic">ProMagno</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Section: Quadro de Avisos Detalhado -->
         <section id="avisos">
             <div class="flex items-center gap-4 mb-8">
@@ -295,8 +372,8 @@
     <!-- Scripts -->
     <script>
         // --- CONFIGURAÇÃO DA DATA ---
-        // Alterado para Novembro de 2026 (Ex: 20/11/2026)
-        const dataFormatura = new Date(2026, 10, 20, 19, 0, 0).getTime(); // Mês 10 = Novembro
+        // Alterado para o primeiro compromisso oficial (Fotos: 29/05/2026)
+        const dataFormatura = new Date(2026, 4, 29, 8, 0, 0).getTime(); // Mês 4 = Maio
 
         // Mobile Menu Toggle
         const btn = document.getElementById('mobile-menu-btn');
@@ -361,7 +438,7 @@
                                 <span class="text-camilo-primary font-medium">${aviso.categoria}</span>
                             </div>
                             <h3 class="text-xl font-bold text-gray-800 mb-2">${aviso.titulo}</h3>
-                            <div class="aviso-content text-gray-600 mb-4 text-sm space-y-2">${aviso.mensagem}</div>
+                            <div class="aviso-content text-gray-600 mb-4 text-sm space-y-2 leading-relaxed">${aviso.mensagem}</div>
                             ${aviso.link ? `<a href="${aviso.link}" target="_blank" class="text-camilo-secondary text-sm font-bold hover:underline">${aviso.linkTexto || 'Saiba mais'} &rarr;</a>` : ''}
                         </div>
                     `).join('');
