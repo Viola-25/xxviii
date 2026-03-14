@@ -344,10 +344,13 @@
             const ultimoAvisoContent = document.getElementById('ultimo-aviso-content');
             
             try {
-                const response = await fetch('avisos.json');
-                if (!response.ok) throw new Error('Erro ao carregar');
+                // Adicionamos um parâmetro de tempo (?t=...) para forçar o navegador a baixar a versão mais recente
+                const response = await fetch('avisos.json?t=' + Date.now());
+                
+                if (!response.ok) throw new Error(`Não foi possível encontrar o arquivo avisos.json (Status: ${response.status})`);
                 
                 const avisos = await response.json();
+                console.log("Avisos carregados com sucesso:", avisos);
 
                 if (avisos.length > 0) {
                     // Atualiza o Quadro de Avisos
@@ -373,6 +376,7 @@
                     throw new Error('Sem avisos');
                 }
             } catch (error) {
+                console.error("Erro detalhado ao carregar avisos:", error);
                 container.innerHTML = `
                     <div class="col-span-full py-12 text-center bg-white rounded-xl border border-dashed border-gray-300">
                         <i class="fa-solid fa-inbox text-gray-300 text-4xl mb-3"></i>
