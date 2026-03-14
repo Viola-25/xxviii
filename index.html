@@ -58,6 +58,11 @@
             background: #e5e7eb;
             z-index: 0;
         }
+
+        /* Estilização para tabelas dentro dos avisos */
+        .aviso-content table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 0.5rem; }
+        .aviso-content th, .aviso-content td { border: 1px solid #e5e7eb; padding: 4px 8px; text-align: left; }
+        .aviso-content th { background: #f9fafb; font-weight: 600; }
         
         @media (min-width: 768px) {
             .timeline-line::before {
@@ -150,16 +155,13 @@
             </div>
 
             <!-- Card 2 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600 cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center">
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600 cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center" onclick="window.open('https://sistema.kazformaturas.com.br/', '_blank')">
                 <div class="flex flex-col items-center mb-4">
                     <i class="fa-solid fa-wallet text-green-600/50 text-2xl mb-2"></i>
                     <h3 class="text-lg font-bold text-gray-800">Financeiro</h3>
                 </div>
-                <p class="text-gray-600 text-sm font-medium">Status da Adesão</p>
-                <div class="w-full max-w-[200px] bg-gray-200 rounded-full h-2.5 mt-2 mb-1">
-                  <div class="bg-green-600 h-2.5 rounded-full" style="width: 85%"></div>
-                </div>
-                <p class="text-xs text-gray-500">85% da turma aderiu</p>
+                <p class="text-gray-600 text-sm font-medium">Acesso ao Sistema KAZ</p>
+                <p class="text-xs text-gray-500">Gestão de pagamentos e adesão</p>
             </div>
 
             <!-- Card 3 -->
@@ -188,7 +190,7 @@
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Card 1: Escala -->
-                <a href="#" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-camilo-primary transition group text-center flex flex-col items-center justify-center">
+                <a href="https://drive.google.com/drive/folders/1kOpWmVd_RO1eSrXu8uMyrLY_2DIUig2y?usp=sharing" target="_blank" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-camilo-primary transition group text-center flex flex-col items-center justify-center">
                     <div class="w-14 h-14 bg-red-50 text-camilo-primary rounded-full flex items-center justify-center mb-4 group-hover:bg-camilo-primary group-hover:text-white transition">
                         <i class="fa-regular fa-calendar-days text-2xl"></i>
                     </div>
@@ -356,7 +358,7 @@
                                 <span class="text-camilo-primary font-medium">${aviso.categoria}</span>
                             </div>
                             <h3 class="text-xl font-bold text-gray-800 mb-2">${aviso.titulo}</h3>
-                            <p class="text-gray-600 mb-4">${aviso.mensagem}</p>
+                            <div class="aviso-content text-gray-600 mb-4 text-sm space-y-2">${aviso.mensagem}</div>
                             ${aviso.link ? `<a href="${aviso.link}" target="_blank" class="text-camilo-secondary text-sm font-bold hover:underline">${aviso.linkTexto || 'Saiba mais'} &rarr;</a>` : ''}
                         </div>
                     `).join('');
