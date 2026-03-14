@@ -59,15 +59,6 @@
             z-index: 0;
         }
         
-        /* Custom Checkbox */
-        .custom-checkbox input:checked + div {
-            background-color: #10B981;
-            border-color: #10B981;
-        }
-        .custom-checkbox input:checked + div svg {
-            display: block;
-        }
-        
         @media (min-width: 768px) {
             .timeline-line::before {
                 left: 50%;
@@ -89,7 +80,6 @@
                 <div class="hidden md:flex space-x-8">
                     <a href="#dashboard" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Início</a>
                     <a href="#interno" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Área do Interno</a>
-                    <a href="#checklist" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Checklist CRM</a>
                     <a href="#avisos" class="text-gray-600 hover:text-camilo-primary px-3 py-2 rounded-md text-sm font-medium transition">Avisos</a>
                 </div>
                 <!-- Mobile menu button -->
@@ -105,7 +95,6 @@
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Início</a>
                 <a href="#interno" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Área do Interno</a>
-                <a href="#checklist" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Checklist CRM</a>
                 <a href="#avisos" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-camilo-primary hover:bg-gray-50">Avisos</a>
             </div>
         </div>
@@ -138,9 +127,6 @@
             </div>
 
             <div class="flex justify-center gap-4">
-                <a href="#checklist" class="inline-flex items-center gap-2 bg-white text-camilo-primary hover:bg-gray-100 font-bold py-3 px-6 rounded-full transition shadow-lg text-sm md:text-base">
-                    <i class="fa-solid fa-list-check"></i> Checklist CRM
-                </a>
                 <a href="#interno" class="inline-flex items-center gap-2 bg-camilo-secondary text-white hover:bg-yellow-600 font-bold py-3 px-6 rounded-full transition shadow-lg text-sm md:text-base">
                     <i class="fa-solid fa-user-doctor"></i> Área do Interno
                 </a>
@@ -152,33 +138,35 @@
         <!-- Shortcuts -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Card 1 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-camilo-primary cursor-pointer hover:-translate-y-1 transition" onclick="window.location.href='#avisos'">
-                <div class="flex justify-between items-start mb-4">
+            <div id="card-ultimo-aviso" class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-camilo-primary cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center" onclick="window.location.href='#avisos'">
+                <div class="flex flex-col items-center mb-4">
+                    <i class="fa-solid fa-bell text-camilo-primary/50 text-2xl mb-2"></i>
                     <h3 class="text-lg font-bold text-gray-800">Último Aviso</h3>
-                    <i class="fa-solid fa-bell text-camilo-primary/50"></i>
                 </div>
-                <p class="text-gray-600 text-sm font-medium">Prazo fotos convite</p>
-                <p class="text-gray-500 text-xs">Até 20/03: Envio das fotos de infância para o telão.</p>
+                <div id="ultimo-aviso-content">
+                    <p class="text-gray-600 text-sm font-medium">Nenhum aviso novo</p>
+                    <p class="text-gray-500 text-xs">Fique atento para futuras atualizações.</p>
+                </div>
             </div>
 
             <!-- Card 2 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600 cursor-pointer hover:-translate-y-1 transition">
-                <div class="flex justify-between items-start mb-4">
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600 cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center">
+                <div class="flex flex-col items-center mb-4">
+                    <i class="fa-solid fa-wallet text-green-600/50 text-2xl mb-2"></i>
                     <h3 class="text-lg font-bold text-gray-800">Financeiro</h3>
-                    <i class="fa-solid fa-wallet text-green-600/50"></i>
                 </div>
                 <p class="text-gray-600 text-sm font-medium">Status da Adesão</p>
-                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2 mb-1">
+                <div class="w-full max-w-[200px] bg-gray-200 rounded-full h-2.5 mt-2 mb-1">
                   <div class="bg-green-600 h-2.5 rounded-full" style="width: 85%"></div>
                 </div>
                 <p class="text-xs text-gray-500">85% da turma aderiu</p>
             </div>
 
             <!-- Card 3 -->
-            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500 cursor-pointer hover:-translate-y-1 transition" onclick="window.open('https://www.instagram.com/medscxxviii/', '_blank')">
-                <div class="flex justify-between items-start mb-4">
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500 cursor-pointer hover:-translate-y-1 transition text-center flex flex-col items-center justify-center" onclick="window.open('https://www.instagram.com/medscxxviii/', '_blank')">
+                <div class="flex flex-col items-center mb-4">
+                    <i class="fa-brands fa-instagram text-purple-500/50 text-2xl mb-2"></i>
                     <h3 class="text-lg font-bold text-gray-800">Redes Sociais</h3>
-                    <i class="fa-brands fa-instagram text-purple-500/50 text-xl"></i>
                 </div>
                 <div class="group">
                     <p class="text-gray-600 text-sm font-medium group-hover:text-purple-600 transition">Instagram da Turma</p>
@@ -200,7 +188,7 @@
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Card 1: Escala -->
-                <a href="#" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-camilo-primary transition group text-center flex flex-col items-center">
+                <a href="#" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-camilo-primary transition group text-center flex flex-col items-center justify-center">
                     <div class="w-14 h-14 bg-red-50 text-camilo-primary rounded-full flex items-center justify-center mb-4 group-hover:bg-camilo-primary group-hover:text-white transition">
                         <i class="fa-regular fa-calendar-days text-2xl"></i>
                     </div>
@@ -209,7 +197,7 @@
                 </a>
 
                 <!-- Card 2: Portal do Aluno -->
-                <a href="https://portaluniversitario.saocamilo.br/FrameHTML/Web/App/Edu/PortalEducacional/login/" target="_blank" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-camilo-secondary transition group text-center flex flex-col items-center">
+                <a href="https://portaluniversitario.saocamilo.br/FrameHTML/Web/App/Edu/PortalEducacional/login/" target="_blank" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-camilo-secondary transition group text-center flex flex-col items-center justify-center">
                     <div class="w-14 h-14 bg-yellow-50 text-camilo-secondary rounded-full flex items-center justify-center mb-4 group-hover:bg-camilo-secondary group-hover:text-white transition">
                         <i class="fa-solid fa-graduation-cap text-2xl"></i>
                     </div>
@@ -218,122 +206,34 @@
                 </a>
 
                 <!-- Card 3: Diretrizes (Lista de Links) -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center justify-center gap-2 mb-4 text-green-700">
-                        <i class="fa-solid fa-book-medical"></i>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition text-center flex flex-col items-center justify-center">
+                    <div class="flex flex-col items-center mb-4 text-green-700">
+                        <i class="fa-solid fa-book-medical text-2xl mb-2"></i>
                         <h3 class="font-bold text-gray-800">Diretrizes Brasileiras</h3>
                     </div>
-                    <div class="space-y-2">
-                        <a href="https://www.portal.cardiol.br/diretrizes" target="_blank" class="block w-full text-left px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
+                    <div class="space-y-2 w-full">
+                        <a href="https://www.portal.cardiol.br/diretrizes" target="_blank" class="block w-full text-center px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
                             <span>SBC (Cardiologia)</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-50"></i>
                         </a>
-                        <a href="https://www.sbp.com.br/tratados-e-diretrizes/" target="_blank" class="block w-full text-left px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
+                        <a href="https://www.sbp.com.br/especiais/documentos-cientificos/" target="_blank" class="block w-full text-center px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
                             <span>SBP (Pediatria)</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-50"></i>
                         </a>
-                         <a href="https://www.febrasgo.org.br/pt/diretrizes" target="_blank" class="block w-full text-left px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
+                         <a href="https://www.febrasgo.org.br/pt/diretrizes" target="_blank" class="block w-full text-center px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
                             <span>FEBRASGO (Gineco)</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-50"></i>
                         </a>
-                        <a href="https://www.gov.br/conitec/pt-br/assuntos/protocolos-clinicos-e-diretrizes-terapeuticas-pcdt" target="_blank" class="block w-full text-left px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
+                        <a href="https://www.gov.br/saude/pt-br/assuntos/pcdt" target="_blank" class="block w-full text-center px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
                             <span>PCDT (Min. Saúde)</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-50"></i>
+                        </a>
+                        <a href="https://diretriz.diabetes.org.br/" target="_blank" class="block w-full text-center px-3 py-2 rounded hover:bg-green-50 text-sm text-gray-600 hover:text-green-700 transition flex justify-between items-center">
+                            <span>SBD (Diabetes)</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-50"></i>
                         </a>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO: CHECKLIST CRM -->
-        <section id="checklist" class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-            <div class="p-6 md:p-8">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                    <div>
-                        <h2 class="text-2xl font-serif font-bold text-gray-800 mb-1">Checklist Burocracia & Formatura</h2>
-                        <p class="text-sm text-gray-500">Não deixe para a última hora!</p>
-                    </div>
-                    <div class="mt-4 md:mt-0 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm font-medium">
-                        <i class="fa-solid fa-circle-info mr-2"></i> Documentação
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
-                    <!-- Item 1 -->
-                    <label class="custom-checkbox flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                        <input type="checkbox" class="hidden">
-                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-3 transition-colors bg-white">
-                            <svg class="w-4 h-4 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <div>
-                            <span class="block text-gray-800 font-medium">Entregar Horas Complementares</span>
-                            <span class="block text-xs text-gray-500">Secretaria Acadêmica (Prazo: Julho)</span>
-                        </div>
-                    </label>
-
-                    <!-- Item 2 -->
-                    <label class="custom-checkbox flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                        <input type="checkbox" class="hidden">
-                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-3 transition-colors bg-white">
-                            <svg class="w-4 h-4 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <div>
-                            <span class="block text-gray-800 font-medium">Enviar Fotos de Infância</span>
-                            <span class="block text-xs text-gray-500">Para o clip da Colação (Prazo: Agosto)</span>
-                        </div>
-                    </label>
-
-                    <!-- Item 3 -->
-                    <label class="custom-checkbox flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                        <input type="checkbox" class="hidden">
-                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-3 transition-colors bg-white">
-                            <svg class="w-4 h-4 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <div>
-                            <span class="block text-gray-800 font-medium">Nada Consta da Biblioteca</span>
-                            <span class="block text-xs text-gray-500">Pegar 30 dias antes da colação</span>
-                        </div>
-                    </label>
-
-                    <!-- Item 4 -->
-                    <label class="custom-checkbox flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                        <input type="checkbox" class="hidden">
-                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-3 transition-colors bg-white">
-                            <svg class="w-4 h-4 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <div>
-                            <span class="block text-gray-800 font-medium">Prova da Beca</span>
-                            <span class="block text-xs text-gray-500">Agendar com a empresa (Setembro)</span>
-                        </div>
-                    </label>
-                    
-                     <!-- Item 5 -->
-                    <label class="custom-checkbox flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                        <input type="checkbox" class="hidden">
-                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-3 transition-colors bg-white">
-                            <svg class="w-4 h-4 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <div>
-                            <span class="block text-gray-800 font-medium">Certidões Negativas (CRM)</span>
-                            <span class="block text-xs text-gray-500">Federal e Estadual (Separar pastas)</span>
-                        </div>
-                    </label>
-                    
-                     <!-- Item 6 -->
-                    <label class="custom-checkbox flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                        <input type="checkbox" class="hidden">
-                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-3 transition-colors bg-white">
-                            <svg class="w-4 h-4 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <div>
-                            <span class="block text-gray-800 font-medium">Votação Paraninfo/Patrono</span>
-                            <span class="block text-xs text-gray-500">Aguardando link (Outubro)</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 text-right">
-                 <button class="text-sm text-camilo-primary font-semibold hover:underline">Baixar Guia Completo PDF</button>
             </div>
         </section>
 
@@ -345,70 +245,26 @@
                 <div class="h-px bg-gray-300 flex-1"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Aviso Item -->
-                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex justify-between text-sm text-gray-500 mb-2">
-                        <span><i class="fa-regular fa-calendar mr-1"></i> 25 Jan 2026</span>
-                        <span class="text-camilo-primary font-medium">Comissão</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Músicas da Colação</h3>
-                    <p class="text-gray-600 mb-4">Já liberamos o formulário para escolha das músicas de entrada individual da colação. Escolham com carinho!</p>
-                    <a href="#" class="text-camilo-secondary text-sm font-bold hover:underline">Acessar Formulário &rarr;</a>
-                </div>
-
-                <!-- Aviso Item -->
-                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
-                    <div class="flex justify-between text-sm text-gray-500 mb-2">
-                        <span><i class="fa-regular fa-calendar mr-1"></i> 20 Jan 2026</span>
-                        <span class="text-camilo-primary font-medium">Financeiro</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Adesão Extra de Convites</h3>
-                    <p class="text-gray-600 mb-4">O lote extra de convites para o baile abre dia 05/02. Fiquem atentos pois são limitados.</p>
+            <div id="container-avisos" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-full py-12 text-center bg-white rounded-xl border border-dashed border-gray-300">
+                    <p class="text-gray-500 animate-pulse">Carregando avisos...</p>
                 </div>
             </div>
         </section>
 
         <!-- Section: Provas de Residência -->
         <section id="residencia" class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-            <div class="bg-gray-900 text-white p-6">
-                <h2 class="text-2xl font-serif font-bold flex items-center">
-                    <i class="fa-solid fa-stethoscope text-camilo-secondary mr-3"></i> Residência 2026/27
+            <div class="bg-gray-900 text-white p-6 text-center">
+                <h2 class="text-2xl font-serif font-bold flex flex-col items-center">
+                    <i class="fa-solid fa-stethoscope text-camilo-secondary mb-2"></i> Residência 2026/27
                 </h2>
-                <p class="text-gray-400 text-sm mt-1">Datas estimadas. Foco total!</p>
+                <p class="text-gray-400 text-sm mt-1">Aguardando editais oficiais</p>
             </div>
             
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold">
-                            <th class="p-4">Instituição</th>
-                            <th class="p-4">Inscrições</th>
-                            <th class="p-4">1ª Fase</th>
-                            <th class="p-4 text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-sm">
-                        <tr class="hover:bg-red-50 transition">
-                            <td class="p-4 font-bold text-gray-800">USP - SP</td>
-                            <td class="p-4">Set/Out</td>
-                            <td class="p-4"><span class="bg-red-100 text-red-800 py-1 px-2 rounded font-mono">Nov/Dez</span></td>
-                            <td class="p-4 text-center"><span class="text-gray-400 text-xs">Aguardando</span></td>
-                        </tr>
-                        <tr class="hover:bg-red-50 transition">
-                            <td class="p-4 font-bold text-gray-800">UNIFESP</td>
-                            <td class="p-4">Outubro</td>
-                            <td class="p-4"><span class="bg-red-100 text-red-800 py-1 px-2 rounded font-mono">Dezembro</span></td>
-                            <td class="p-4 text-center"><span class="text-gray-400 text-xs">Aguardando</span></td>
-                        </tr>
-                        <tr class="hover:bg-red-50 transition">
-                            <td class="p-4 font-bold text-gray-800">Santa Casa SP</td>
-                            <td class="p-4">Set/Out</td>
-                            <td class="p-4"><span class="bg-red-100 text-red-800 py-1 px-2 rounded font-mono">Novembro</span></td>
-                            <td class="p-4 text-center"><span class="text-gray-400 text-xs">Aguardando</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="py-12 text-center">
+                <i class="fa-solid fa-calendar-xmark text-gray-200 text-5xl mb-4"></i>
+                <p class="text-gray-500 italic">Cronograma ainda não divulgado pelas instituições.</p>
+                <p class="text-gray-400 text-xs mt-2">As datas serão atualizadas assim que os editais forem publicados.</p>
             </div>
         </section>
     </div>
@@ -479,18 +335,53 @@
                 });
             });
         });
-        
-        // Checklist logic (salvar no localStorage para não perder ao recarregar)
-        document.querySelectorAll('.custom-checkbox input').forEach((checkbox, index) => {
-            const savedState = localStorage.getItem('checklist_item_' + index);
-            if (savedState === 'true') {
-                checkbox.checked = true;
-            }
+
+        // Função para carregar avisos do JSON
+        async function carregarAvisos() {
+            const container = document.getElementById('container-avisos');
+            const ultimoAvisoContent = document.getElementById('ultimo-aviso-content');
             
-            checkbox.addEventListener('change', function() {
-                localStorage.setItem('checklist_item_' + index, this.checked);
-            });
-        });
+            try {
+                const response = await fetch('avisos.json');
+                if (!response.ok) throw new Error('Erro ao carregar');
+                
+                const avisos = await response.json();
+
+                if (avisos.length > 0) {
+                    // Atualiza o Quadro de Avisos
+                    container.innerHTML = avisos.map(aviso => `
+                        <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                            <div class="flex justify-between text-sm text-gray-500 mb-2">
+                                <span><i class="fa-regular fa-calendar mr-1"></i> ${aviso.data}</span>
+                                <span class="text-camilo-primary font-medium">${aviso.categoria}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${aviso.titulo}</h3>
+                            <p class="text-gray-600 mb-4">${aviso.mensagem}</p>
+                            ${aviso.link ? `<a href="${aviso.link}" target="_blank" class="text-camilo-secondary text-sm font-bold hover:underline">${aviso.linkTexto || 'Saiba mais'} &rarr;</a>` : ''}
+                        </div>
+                    `).join('');
+
+                    // Atualiza o Card de Atalho no topo com o aviso mais recente
+                    const maisRecente = avisos[0];
+                    ultimoAvisoContent.innerHTML = `
+                        <p class="text-gray-600 text-sm font-medium line-clamp-1">${maisRecente.titulo}</p>
+                        <p class="text-gray-500 text-xs">${maisRecente.data}</p>
+                    `;
+                } else {
+                    throw new Error('Sem avisos');
+                }
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center bg-white rounded-xl border border-dashed border-gray-300">
+                        <i class="fa-solid fa-inbox text-gray-300 text-4xl mb-3"></i>
+                        <p class="text-gray-500 italic">Nenhum aviso no momento. Volte em breve!</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Iniciar carregamento ao abrir a página
+        carregarAvisos();
     </script>
 </body>
 </html>
