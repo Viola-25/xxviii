@@ -374,9 +374,28 @@
     </footer>
 
     <!-- Scripts -->
-    <script>
+    <script type="module">
+        // Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCDz76CjYtjQa31WVOJRYNzrQLmyF7Bg2k",
+          authDomain: "med-sc-xxviii-dashboard.firebaseapp.com",
+          projectId: "med-sc-xxviii-dashboard",
+          storageBucket: "med-sc-xxviii-dashboard.firebasestorage.app",
+          messagingSenderId: "1053109121063",
+          appId: "1:1053109121063:web:643f68f16975ac16951e02",
+          measurementId: "G-S6S7XQ7HG2"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
         // --- CONFIGURAÇÃO DA DATA ---
-        // Eventos Principais (Mês 9 = Outubro)
         const eventosPrincipais = [
             { nome: "a Colação de Grau", data: new Date(2026, 9, 6, 18, 30).getTime() },
             { nome: "o Culto Ecumênico", data: new Date(2026, 9, 7, 14, 0).getTime() },
@@ -438,12 +457,12 @@
             const ultimoAvisoContent = document.getElementById('ultimo-aviso-content');
             
             try {
-                // Adicionamos um parâmetro de tempo (?t=...) para forçar o navegador a baixar a versão mais recente
-                const response = await fetch('avisos.json?t=' + Date.now());
-                
-                if (!response.ok) throw new Error(`Não foi possível encontrar o arquivo avisos.json (Status: ${response.status})`);
-                
-                const avisos = await response.json();
+                // Busca no Firestore: Ordenando pelo timestamp de criação
+                const q = query(collection(db, "avisos"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                const avisos = [];
+                querySnapshot.forEach((doc) => avisos.push(doc.data()));
+
                 console.log("Avisos carregados com sucesso:", avisos);
 
                 if (avisos.length > 0) {
