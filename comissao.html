@@ -6,6 +6,8 @@
     <title>Painel da Comissão - Med XXVIII</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -15,6 +17,12 @@
             }
         }
     </script>
+    <style>
+        /* Ajuste de altura do editor */
+        .ck-editor__editable {
+            min-height: 250px;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen pb-20">
     <nav class="bg-camilo-primary text-white shadow-lg p-4 mb-8">
@@ -64,17 +72,8 @@
                         Mensagem (HTML permitido)
                         <span class="text-xs text-gray-400">Use os botões para formatar</span>
                     </label>
-                    <div class="flex flex-wrap gap-2 mb-2 bg-gray-50 p-2 rounded border">
-                        <button type="button" onclick="insertTag('strong')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100"><b>B</b></button>
-                        <button type="button" onclick="insertTag('em')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100"><i>I</i></button>
-                        <button type="button" onclick="insertTag('a')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100"><i class="fa-solid fa-link"></i> Link</button>
-                        <button type="button" onclick="insertTag('h2')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100">H2</button>
-                        <button type="button" onclick="insertTag('h3')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100">H3</button>
-                        <button type="button" onclick="insertTag('ul')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100"><i class="fa-solid fa-list"></i> Lista</button>
-                        <button type="button" onclick="insertTag('table')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100"><i class="fa-solid fa-table"></i> Tabela</button>
-                        <button type="button" onclick="insertTag('br')" class="px-2 py-1 bg-white border rounded text-xs hover:bg-gray-100">Pular Linha</button>
-                    </div>
-                    <textarea id="mensagem" rows="6" required class="w-full p-2 border rounded-md font-mono text-sm focus:ring-2 focus:ring-camilo-primary outline-none" placeholder="Digite o conteúdo aqui..."></textarea>
+                    <!-- O CKEditor substituirá este textarea -->
+                    <textarea id="mensagem" rows="10" class="w-full p-2 border rounded-md outline-none" placeholder="Digite o conteúdo aqui..."></textarea>
                 </div>
 
                 <button type="submit" id="btn-submit" class="w-full bg-camilo-primary text-white font-bold py-3 rounded-md hover:bg-red-900 transition flex items-center justify-center gap-2">
@@ -84,15 +83,6 @@
                     <i class="fa-solid fa-xmark"></i> Cancelar Edição
                 </button>
             </form>
-        </div>
-
-        <!-- Ferramentas de Migração -->
-        <div class="mt-8 p-6 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl">
-            <h3 class="text-sm font-bold text-gray-700 mb-2 uppercase tracking-tight">Migração de Dados</h3>
-            <p class="text-xs text-gray-500 mb-4">Clique no botão abaixo para ler o arquivo <code>avisos.json</code> local e enviar todos os registros para o Firestore automaticamente.</p>
-            <button id="btn-importar" class="bg-white border border-gray-300 text-gray-700 text-xs px-4 py-2 rounded hover:bg-gray-100 transition flex items-center gap-2">
-                <i class="fa-solid fa-file-import"></i> Importar avisos.json para Firestore
-            </button>
         </div>
 
         <div id="status" class="mt-4 hidden p-4 rounded-md text-center font-medium"></div>
@@ -126,12 +116,23 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        let editorInstance;
+
+        // Inicializar o Editor Visual (CKEditor 5)
+        ClassicEditor
+            .create(document.querySelector('#mensagem'), {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'insertTable', 'undo', 'redo']
+            })
+            .then(editor => {
+                editorInstance = editor;
+            })
+            .catch(error => console.error(error));
+
         const form = document.getElementById('form-aviso');
         const formTitle = document.getElementById('form-title');
         const status = document.getElementById('status');
         const btnSubmit = document.getElementById('btn-submit');
         const btnCancelEdit = document.getElementById('btn-cancel-edit');
-        const btnImportar = document.getElementById('btn-importar');
         const listaAvisos = document.getElementById('lista-avisos');
 
         let editingAvisoId = null; // Variável para armazenar o ID do aviso sendo editado
@@ -139,40 +140,13 @@
         // Função auxiliar para limpar o formulário e resetar o estado
         function clearForm() {
             form.reset();
+            if (editorInstance) editorInstance.setData('');
             editingAvisoId = null;
             formTitle.textContent = "Novo Aviso";
             btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar Aviso';
             btnCancelEdit.classList.add('hidden');
             status.classList.add('hidden');
         }
-
-        // Lógica para importar dados do JSON local para o Firestore
-        btnImportar.addEventListener('click', async () => {
-            if (!confirm("Deseja importar todos os avisos do arquivo avisos.json para o banco de dados?")) return;
-            
-            btnImportar.disabled = true;
-            btnImportar.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Importando...';
-
-            try {
-                const response = await fetch('avisos.json');
-                const avisos = await response.json();
-
-                for (const aviso of avisos) {
-                    await addDoc(collection(db, "avisos"), {
-                        ...aviso,
-                        createdAt: serverTimestamp() // Adiciona o timestamp para manter a ordem
-                    });
-                }
-
-                alert("Importação concluída! " + avisos.length + " avisos adicionados com sucesso.");
-            } catch (error) {
-                alert("Erro ao importar: " + error.message);
-                console.error(error);
-            } finally {
-                btnImportar.disabled = false;
-                btnImportar.innerHTML = '<i class="fa-solid fa-file-import"></i> Importar avisos.json para Firestore';
-            }
-        });
 
         // Função para renderizar os avisos existentes
         async function renderAvisos() {
@@ -217,7 +191,7 @@
                             document.getElementById('categoria').value = avisoToEdit.categoria;
                             document.getElementById('data').value = avisoToEdit.data;
                             document.getElementById('link').value = avisoToEdit.link || '';
-                            document.getElementById('mensagem').value = avisoToEdit.mensagem;
+                            if (editorInstance) editorInstance.setData(avisoToEdit.mensagem);
                             // O campo linkTexto é gerado automaticamente, não precisa ser preenchido
                             
                             editingAvisoId = id;
@@ -272,16 +246,23 @@
                 data: document.getElementById('data').value,
                 link: document.getElementById('link').value,
                 linkTexto: document.getElementById('link').value ? "Saiba mais" : "",
-                mensagem: document.getElementById('mensagem').value,
-                createdAt: serverTimestamp() // Importante para ordenação
+                mensagem: editorInstance.getData(), // Pega o conteúdo formatado
             };
 
             try {
-                await addDoc(collection(db, "avisos"), dados);
-                status.textContent = "✅ Aviso publicado com sucesso!";
+                if (editingAvisoId) {
+                    // Atualiza aviso existente
+                    await updateDoc(doc(db, "avisos", editingAvisoId), dados);
+                    status.textContent = "✅ Aviso atualizado com sucesso!";
+                } else {
+                    // Cria novo aviso com timestamp
+                    await addDoc(collection(db, "avisos"), { ...dados, createdAt: serverTimestamp() });
+                    status.textContent = "✅ Aviso publicado com sucesso!";
+                }
                 status.className = "mt-4 p-4 rounded-md text-center font-medium bg-green-100 text-green-800";
                 status.classList.remove('hidden');
-                form.reset();
+                clearForm();
+                renderAvisos();
             } catch (error) {
                 console.error(error);
                 status.textContent = "❌ Erro ao publicar: " + error.message;
@@ -292,75 +273,6 @@
                 btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar Aviso';
             }
         });
-
-        // Função global para inserir tags no textarea
-        window.insertTag = (type) => {
-            const textarea = document.getElementById('mensagem');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const text = textarea.value;
-            const selected = text.substring(start, end);
-            
-            let replacement = ""; // O texto que será inserido
-            let cursorOffset = 0; // Posição do cursor após a inserção
-            let selectionLength = 0; // Comprimento da seleção após a inserção
-
-            switch(type) {
-                case 'strong': 
-                    replacement = `<strong>${selected}</strong>`; 
-                    cursorOffset = start + "<strong>".length;
-                    selectionLength = selected.length;
-                    break;
-                case 'em': 
-                    replacement = `<em>${selected}</em>`; 
-                    cursorOffset = start + "<em>".length;
-                    selectionLength = selected.length;
-                    break;
-                case 'a': 
-                    const url = prompt("Insira o URL do link:", "https://");
-                    if (url) {
-                        replacement = `<a href="${url}" target="_blank">${selected || 'Link'}</a>`;
-                        cursorOffset = start + `<a href="${url}" target="_blank">`.length;
-                        selectionLength = selected.length || "Link".length;
-                    } else {
-                        replacement = selected; // Não faz nada se o URL for cancelado
-                    }
-                    break;
-                case 'h2': 
-                    replacement = `<h2>${selected || 'Título H2'}</h2>`; 
-                    cursorOffset = start + "<h2>".length;
-                    selectionLength = selected.length || "Título H2".length;
-                    break;
-                case 'h3': 
-                    replacement = `<h3>${selected || 'Título H3'}</h3>`; 
-                    cursorOffset = start + "<h3>".length;
-                    selectionLength = selected.length || "Título H3".length;
-                    break;
-                case 'br': 
-                    replacement = `${selected}<br>`; 
-                    cursorOffset = start + selected.length + "<br>".length;
-                    selectionLength = 0;
-                    break;
-                case 'ul': 
-                    replacement = `<ul>\n  <li>Item 1</li>\n  <li>Item 2</li>\n</ul>`; 
-                    cursorOffset = start + replacement.length; // Coloca o cursor no final do template
-                    selectionLength = 0;
-                    break;
-                case 'table': 
-                    replacement = `<table>\n  <thead>\n    <tr><th>Item</th><th>Valor</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>Exemplo</td><td>R$ 100</td></tr>\n  </tbody>\n</table>`; 
-                    cursorOffset = start + replacement.length; // Coloca o cursor no final do template
-                    selectionLength = 0;
-                    break;
-                default: 
-                    replacement = selected; // Caso padrão, não deve acontecer
-                    cursorOffset = start;
-                    selectionLength = selected.length;
-            }
-            
-            textarea.value = text.substring(0, start) + replacement + text.substring(end);
-            textarea.focus();
-            textarea.setSelectionRange(cursorOffset, cursorOffset + selectionLength);
-        }; // Fim da função insertTag
     </script>
 </body>
 </html>
