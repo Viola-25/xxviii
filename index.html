@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Med São Camilo XXVIII</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="Brasão-09.png">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -81,7 +84,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex-shrink-0 flex items-center gap-2">
-                    <i class="fa-solid fa-staff-snake text-camilo-primary text-2xl"></i>
+                    <img src="Brasão-09.png" alt="Brasão XXVIII" class="h-10 w-auto">
                     <span class="font-serif font-bold text-xl text-gray-900">Med São Camilo <span class="text-camilo-primary">XXVIII</span></span>
                 </div>
                 <div class="hidden md:flex space-x-8">
@@ -115,8 +118,9 @@
         <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-yellow-400 opacity-5 blur-3xl"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <img src="Brasão-09.png" alt="Brasão Medicina São Camilo XXVIII" class="h-32 md:h-48 mx-auto mb-6 drop-shadow-2xl">
             <span class="bg-white/20 backdrop-blur-md text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase mb-4 inline-block border border-white/30">Reta Final</span>
-            <h1 class="text-3xl md:text-5xl font-serif font-bold mb-6 px-4">Contagem Regressiva</h1>
+            <h1 id="countdown-label" class="text-3xl md:text-5xl font-serif font-bold mb-6 px-4">Contagem Regressiva</h1>
             <p class="text-red-100 max-w-2xl mx-auto mb-10 text-base md:text-lg px-4 italic">"O sucesso é a soma de pequenos esforços repetidos dia após dia."</p>
 
             <!-- Countdown Timer -->
@@ -372,8 +376,14 @@
     <!-- Scripts -->
     <script>
         // --- CONFIGURAÇÃO DA DATA ---
-        // Alterado para o primeiro compromisso oficial (Fotos: 29/05/2026)
-        const dataFormatura = new Date(2026, 4, 29, 8, 0, 0).getTime(); // Mês 4 = Maio
+        // Eventos Principais (Mês 9 = Outubro)
+        const eventosPrincipais = [
+            { nome: "a Colação de Grau", data: new Date(2026, 9, 6, 18, 30).getTime() },
+            { nome: "o Culto Ecumênico", data: new Date(2026, 9, 7, 14, 0).getTime() },
+            { nome: "o Jantar de Formatura", data: new Date(2026, 9, 8, 21, 0).getTime() },
+            { nome: "o Baile de Formatura", data: new Date(2026, 9, 10, 22, 0).getTime() }
+        ];
+        const labelEvento = document.getElementById("countdown-label");
 
         // Mobile Menu Toggle
         const btn = document.getElementById('mobile-menu-btn');
@@ -386,7 +396,21 @@
         // Countdown Logic
         const countdownFunction = setInterval(() => {
             const now = new Date().getTime();
-            const distance = dataFormatura - now;
+            
+            // Encontrar o próximo evento na lista
+            const proximoEvento = eventosPrincipais.find(ev => ev.data > now);
+
+            if (!proximoEvento) {
+                clearInterval(countdownFunction);
+                labelEvento.innerText = "Formados! 🎉";
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                return;
+            }
+
+            labelEvento.innerText = `Faltam para ${proximoEvento.nome}`;
+            const distance = proximoEvento.data - now;
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -395,13 +419,6 @@
             document.getElementById("days").innerText = days < 10 && days >= 0 ? "0" + days : (days < 0 ? "00" : days);
             document.getElementById("hours").innerText = hours < 10 && hours >= 0 ? "0" + hours : (hours < 0 ? "00" : hours);
             document.getElementById("minutes").innerText = minutes < 10 && minutes >= 0 ? "0" + minutes : (minutes < 0 ? "00" : minutes);
-
-            if (distance < 0) {
-                clearInterval(countdownFunction);
-                document.getElementById("days").innerHTML = "00";
-                document.getElementById("hours").innerHTML = "00";
-                document.getElementById("minutes").innerHTML = "00";
-            }
         }, 1000);
 
         // Smooth Scroll
