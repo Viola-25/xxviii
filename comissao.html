@@ -27,12 +27,33 @@
 <body class="bg-gray-100 min-h-screen pb-20">
     <nav class="bg-camilo-primary text-white shadow-lg p-4 mb-8">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="font-bold text-xl uppercase tracking-wider">Painel da Comissão <span class="text-camilo-secondary">Med XXVIII</span></h1>
-            <a href="index.html" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition"><i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Ver Dashboard</a>
+            <h1 class="font-bold text-lg md:text-xl uppercase tracking-wider">Painel <span class="hidden md:inline text-camilo-secondary">Med XXVIII</span></h1>
+            <div class="flex items-center gap-2 md:gap-4">
+                <a href="index.html" class="text-xs md:text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition"><i class="fa-solid fa-house mr-1"></i> Dashboard</a>
+                <button id="btn-logout" class="hidden text-xs md:text-sm bg-red-700 hover:bg-red-800 px-3 py-1 rounded transition"><i class="fa-solid fa-power-off mr-1"></i> Sair</button>
+            </div>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-4">
+    <!-- Tela de Login -->
+    <div id="login-container" class="max-w-md mx-auto px-4 mt-12 md:mt-20">
+        <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+            <div class="text-center mb-8">
+                <i class="fa-solid fa-lock text-camilo-primary text-4xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800">Acesso Restrito</h2>
+                <p class="text-gray-500 text-sm">Identifique-se para gerenciar avisos</p>
+            </div>
+            <form id="form-login" class="space-y-4">
+                <input type="email" id="login-email" required class="w-full p-3 border rounded-md outline-none focus:ring-2 focus:ring-camilo-primary" placeholder="E-mail">
+                <input type="password" id="login-password" required class="w-full p-3 border rounded-md outline-none focus:ring-2 focus:ring-camilo-primary" placeholder="Senha">
+                <button type="submit" class="w-full bg-camilo-primary text-white font-bold py-3 rounded-md hover:bg-red-900 transition">Entrar</button>
+                <p id="login-error" class="text-red-600 text-sm text-center hidden"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal (Oculto até o login) -->
+    <main id="main-content" class="max-w-4xl mx-auto px-4 hidden">
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
             <div class="p-6 border-b border-gray-100">
                 <h2 class="text-lg font-bold text-gray-800" id="form-title">Novo Aviso</h2>
@@ -102,6 +123,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"; // Importa a função de inicialização do Firebase
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; // Importa as funções do Firestore
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"; // Importa Auth
 
         const firebaseConfig = {
             apiKey: "AIzaSyCDz76CjYtjQa31WVOJRYNzrQLmyF7Bg2k",
@@ -115,6 +137,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
         let editorInstance;
 
@@ -128,12 +151,50 @@
             })
             .catch(error => console.error(error));
 
+        // Elementos da UI
         const form = document.getElementById('form-aviso');
         const formTitle = document.getElementById('form-title');
         const status = document.getElementById('status');
         const btnSubmit = document.getElementById('btn-submit');
         const btnCancelEdit = document.getElementById('btn-cancel-edit');
         const listaAvisos = document.getElementById('lista-avisos');
+        const loginContainer = document.getElementById('login-container');
+        const mainContent = document.getElementById('main-content');
+        const btnLogout = document.getElementById('btn-logout');
+        const formLogin = document.getElementById('form-login');
+        const loginError = document.getElementById('login-error');
+
+        // Observador de Estado de Autenticação
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginContainer.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                btnLogout.classList.remove('hidden');
+                renderAvisos();
+            } else {
+                loginContainer.classList.remove('hidden');
+                mainContent.classList.add('hidden');
+                btnLogout.classList.add('hidden');
+            }
+        });
+
+        // Lógica de Login
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                loginError.classList.add('hidden');
+            } catch (error) {
+                console.error(error);
+                loginError.textContent = "Acesso negado. Verifique suas credenciais.";
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        // Lógica de Logout
+        btnLogout.addEventListener('click', () => signOut(auth));
 
         let editingAvisoId = null; // Variável para armazenar o ID do aviso sendo editado
 
@@ -228,9 +289,6 @@
                 listaAvisos.innerHTML = '<p class="text-red-500 text-center">Erro ao carregar avisos.</p>';
             }
         }
-
-        // Carrega os avisos existentes ao iniciar a página
-        renderAvisos();
 
         // Botão de cancelar edição
         btnCancelEdit.addEventListener('click', clearForm);
