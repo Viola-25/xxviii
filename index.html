@@ -184,6 +184,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- Forms Ativos -->
+        <div id="section-forms" class="mt-10 hidden">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Forms Ativos</h3>
+            </div>
+            <div id="container-forms" class="flex flex-wrap gap-3"></div>
+        </div>
     </div>
 
     <!-- Main Content Grid -->
@@ -499,8 +511,36 @@
             }
         }
 
+        // Função para carregar links de formulários
+        async function carregarForms() {
+            const section = document.getElementById('section-forms');
+            const container = document.getElementById('container-forms');
+            
+            try {
+                const q = query(collection(db, "forms"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                const forms = [];
+                querySnapshot.forEach((doc) => forms.push(doc.data()));
+
+                if (forms.length > 0) {
+                    section.classList.remove('hidden');
+                    container.innerHTML = forms.map(form => `
+                        <a href="${form.link}" target="_blank" class="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-camilo-secondary transition text-sm font-medium text-gray-700 flex items-center gap-2">
+                            <i class="fa-solid fa-file-signature text-camilo-secondary"></i>
+                            ${form.titulo}
+                        </a>
+                    `).join('');
+                } else {
+                    section.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error("Erro ao carregar forms:", error);
+            }
+        }
+
         // Iniciar carregamento ao abrir a página
         carregarAvisos();
+        carregarForms();
     </script>
 </body>
 </html>

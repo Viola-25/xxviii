@@ -118,6 +118,26 @@
                 <p class="text-gray-500 text-center">Carregando avisos...</p>
             </div>
         </div>
+
+        <!-- Gerenciar Forms -->
+        <div class="mt-12 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+            <div class="p-6 border-b border-gray-100 bg-gray-50">
+                <h2 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-file-signature mr-2 text-camilo-secondary"></i> Forms Ativos</h2>
+                <p class="text-sm text-gray-500">Adicione links rápidos para formulários e pesquisas.</p>
+            </div>
+            <form id="form-forms" class="p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="form-titulo" required class="p-2 border rounded-md focus:ring-2 focus:ring-camilo-secondary outline-none text-sm" placeholder="Título do Form">
+                    <input type="url" id="form-link" required class="p-2 border rounded-md focus:ring-2 focus:ring-camilo-secondary outline-none text-sm" placeholder="Link (https://...)">
+                </div>
+                <button type="submit" id="btn-submit-form" class="w-full bg-camilo-secondary text-white font-bold py-2 rounded-md hover:bg-yellow-600 transition text-sm">
+                    Adicionar Formulário
+                </button>
+            </form>
+            <div id="lista-forms" class="p-6 border-t border-gray-50 bg-white">
+                <p class="text-gray-400 text-center text-xs">Carregando forms...</p>
+            </div>
+        </div>
     </main>
 
     <script type="module">
@@ -163,6 +183,8 @@
         const btnLogout = document.getElementById('btn-logout');
         const formLogin = document.getElementById('form-login');
         const loginError = document.getElementById('login-error');
+        const formForms = document.getElementById('form-forms');
+        const listaForms = document.getElementById('lista-forms');
 
         // Observador de Estado de Autenticação
         onAuthStateChanged(auth, (user) => {
@@ -171,6 +193,7 @@
                 mainContent.classList.remove('hidden');
                 btnLogout.classList.remove('hidden');
                 renderAvisos();
+                renderForms();
             } else {
                 loginContainer.classList.remove('hidden');
                 mainContent.classList.add('hidden');
@@ -330,6 +353,54 @@
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar Aviso';
             }
+        });
+
+        // --- LÓGICA DE FORMS ---
+        async function renderForms() {
+            try {
+                const q = query(collection(db, "forms"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                const forms = [];
+                querySnapshot.forEach((doc) => forms.push({ id: doc.id, ...doc.data() }));
+
+                if (forms.length === 0) {
+                    listaForms.innerHTML = '<p class="text-gray-400 text-center text-xs italic">Nenhum formulário ativo.</p>';
+                    return;
+                }
+
+                listaForms.innerHTML = forms.map(f => `
+                    <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded transition border-b border-gray-50 last:border-0">
+                        <span class="text-sm text-gray-700 truncate font-medium">${f.titulo}</span>
+                        <button type="button" data-id="${f.id}" class="btn-delete-form text-red-400 hover:text-red-600 transition px-2">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.btn-delete-form').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if (confirm("Deseja remover este formulário?")) {
+                            await deleteDoc(doc(db, "forms", e.currentTarget.dataset.id));
+                            renderForms();
+                        }
+                    });
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        formForms.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-form');
+            btn.disabled = true;
+            const dados = {
+                titulo: document.getElementById('form-titulo').value,
+                link: document.getElementById('form-link').value,
+                createdAt: serverTimestamp()
+            };
+            await addDoc(collection(db, "forms"), dados);
+            formForms.reset();
+            btn.disabled = false;
+            renderForms();
         });
     </script>
 </body>
