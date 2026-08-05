@@ -57,4 +57,7 @@ Actions → "pages build and deployment".
   vão pro GitHub.
 - Coleção `avisos`: campos `titulo`, `categoria`, `data`, `mensagem` (HTML),
   `link`/`linkTexto` (opcional), `createdAt` (serverTimestamp).
+  - Contagem regressiva (opcional): `countdownAtivo` (bool), `countdownData`
+    (string `YYYY-MM-DDTHH:mm`, fuso local), `countdownLabel` (rótulo). O
+    `index.html` renderiza um timer ao vivo via `initCountdowns()`.
 - Coleção `forms`: acessada pela página principal (`index.html`).
