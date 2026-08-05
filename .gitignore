@@ -1,0 +1,21 @@
+# __pycache__
+__pycache__/
+
+# Dependências
+node_modules/
+
+# Logs
+*.log
+
+# Ambiente
+.env
+.env.local
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
