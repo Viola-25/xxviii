@@ -82,11 +82,28 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Data de Exibição</label>
                         <input type="text" id="data" required class="w-full p-2 border rounded-md focus:ring-2 focus:ring-camilo-primary outline-none" placeholder="Ex: 15 Mar">
                     </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Link (Opcional)</label>
+                    <input type="url" id="link" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-camilo-primary outline-none" placeholder="https://...">
+                </div>
+            </div>
+
+            <div class="rounded-lg border border-gray-200 p-4 space-y-3">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="countdown-ativo" class="w-4 h-4 accent-camilo-primary">
+                    <span class="text-sm font-medium text-gray-700"><i class="fa-regular fa-clock mr-1 text-camilo-primary"></i> Adicionar contagem regressiva ao aviso</span>
+                </label>
+                <div id="countdown-campos" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Link (Opcional)</label>
-                        <input type="url" id="link" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-camilo-primary outline-none" placeholder="https://...">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Data e hora do evento</label>
+                        <input type="datetime-local" id="countdown-data" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-camilo-primary outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Rótulo (Opcional)</label>
+                        <input type="text" id="countdown-label" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-camilo-primary outline-none" placeholder="Ex: Faltam para a prova">
                     </div>
                 </div>
+            </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1 flex justify-between">
@@ -185,6 +202,13 @@
         const loginError = document.getElementById('login-error');
         const formForms = document.getElementById('form-forms');
         const listaForms = document.getElementById('lista-forms');
+        const countdownAtivo = document.getElementById('countdown-ativo');
+        const countdownCampos = document.getElementById('countdown-campos');
+        const countdownData = document.getElementById('countdown-data');
+        const countdownLabel = document.getElementById('countdown-label');
+
+        // Mostra/esconde os campos de contagem regressiva
+        countdownAtivo.addEventListener('change', () => countdownCampos.classList.toggle('hidden', !countdownAtivo.checked));
 
         // Observador de Estado de Autenticação
         onAuthStateChanged(auth, (user) => {
@@ -230,6 +254,10 @@
             btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar Aviso';
             btnCancelEdit.classList.add('hidden');
             status.classList.add('hidden');
+            countdownAtivo.checked = false;
+            countdownData.value = '';
+            countdownLabel.value = '';
+            countdownCampos.classList.add('hidden');
         }
 
         // Função para renderizar os avisos existentes
@@ -276,6 +304,11 @@
                             document.getElementById('data').value = avisoToEdit.data;
                             document.getElementById('link').value = avisoToEdit.link || '';
                             if (editorInstance) editorInstance.setData(avisoToEdit.mensagem);
+                            // Contagem regressiva
+                            countdownAtivo.checked = !!avisoToEdit.countdownAtivo;
+                            countdownData.value = avisoToEdit.countdownData || '';
+                            countdownLabel.value = avisoToEdit.countdownLabel || '';
+                            countdownCampos.classList.toggle('hidden', !avisoToEdit.countdownAtivo);
                             // O campo linkTexto é gerado automaticamente, não precisa ser preenchido
                             
                             editingAvisoId = id;
@@ -329,6 +362,24 @@
                 linkTexto: document.getElementById('link').value ? "Saiba mais" : "",
                 mensagem: editorInstance.getData(), // Pega o conteúdo formatado
             };
+
+            if (countdownAtivo.checked) {
+                if (!countdownData.value) {
+                    status.textContent = "⚠️ Marque a data/hora do evento para usar a contagem regressiva.";
+                    status.className = "mt-4 p-4 rounded-md text-center font-medium bg-yellow-100 text-yellow-800";
+                    status.classList.remove('hidden');
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar Aviso';
+                    return;
+                }
+                dados.countdownAtivo = true;
+                dados.countdownData = countdownData.value;
+                dados.countdownLabel = countdownLabel.value.trim();
+            } else {
+                dados.countdownAtivo = false;
+                dados.countdownData = "";
+                dados.countdownLabel = "";
+            }
 
             try {
                 if (editingAvisoId) {
