@@ -1,0 +1,32 @@
+name: Atualizar calendario de residencia
+
+on:
+  schedule:
+    - cron: "15 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-calendar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Buscar e regenerar tabela
+        run: python scripts/update-calendar.py
+
+      - name: Commit se houver mudancas
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html scripts/update-calendar.py
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: atualiza calendario de residencia medica"
+            git push
+          fi
