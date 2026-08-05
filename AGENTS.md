@@ -60,4 +60,8 @@ Actions → "pages build and deployment".
   - Contagem regressiva (opcional): `countdownAtivo` (bool), `countdownData`
     (string `YYYY-MM-DDTHH:mm`, fuso local), `countdownLabel` (rótulo). O
     `index.html` renderiza um timer ao vivo via `initCountdowns()`.
+  - **Cuidado (REST API do Firestore)**: PATCH sem `updateMask` SUBSTITUI o
+    documento inteiro — campos não enviados são apagados. Para editar campos
+    avulsos via REST, sempre passar `updateMask` (ex: `{"updateMask":{"fieldPaths":["mensagem","countdownLabel"]}}`).
+    Senão, reenviar o doc completo com todos os campos.
 - Coleção `forms`: acessada pela página principal (`index.html`).
