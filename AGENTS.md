@@ -47,3 +47,14 @@ Actions → "Atualizar calendario de residencia" → Run workflow.
 
 Push em `main` redeploya o Pages automaticamente. Verificar status em
 Actions → "pages build and deployment".
+
+## Admin / credenciais
+
+- Manager de admin: `comissao.html` (Firebase Auth + Firestore: coleções
+  `avisos` e `forms`).
+- Credenciais de admin ficam em **`AGENTS.local.md`** (arquivo local, ignorado
+  pelo `.gitignore`). **Nunca** versionar nem colar credenciais em arquivos que
+  vão pro GitHub.
+- Coleção `avisos`: campos `titulo`, `categoria`, `data`, `mensagem` (HTML),
+  `link`/`linkTexto` (opcional), `createdAt` (serverTimestamp).
+- Coleção `forms`: acessada pela página principal (`index.html`).
