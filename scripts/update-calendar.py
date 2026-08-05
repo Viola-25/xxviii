@@ -36,46 +36,6 @@ GROUP_2 = "Ingresso 2027"
 WEAK_VALUES = {"\u2013", "\u2014", "a confirmar", "aguardando divulga\u00e7\u00e3o",
                "aguardando edital suplementar", "aguardando divulga\u00e7\u00e3o edital suplementar"}
 
-# Municipio por instituicao. Chave = nome exato usado pelo Estrategia MED.
-# Nomes sem entrada aparecem como "—" na tabela. Edite aqui quando souber.
-MUNICIPIOS = {
-    "santa casa de ara\u00e7atuba": "Ara\u00e7atuba",
-    "honpar": "Paranava\u00ed",
-    "santa casa de campo grande": "Campo Grande",
-    "uespi": "Teresina",
-    "uel": "Londrina",
-    "hospital nossa senhora das gra\u00e7as": "Curitiba",
-    "hospital de amor de barretos": "Barretos",
-    "ufpel": "Pelotas",
-    "hdj-imas": "Joinville",
-    "hospital aldenora bello": "S\u00e3o Lu\u00eds",
-    "fbhc": "Aracaju",
-    "scmsjrp": "S\u00e3o Jos\u00e9 do Rio Preto",
-    "unipampa": "Uruguaiana",
-    "unimar": "Mar\u00edlia",
-    "hospital universit\u00e1rio de vassouras": "Vassouras",
-    "cesupa": "Bel\u00e9m",
-    "fundhacre": "Rio Branco",
-    "hospital escola \u00e1lvaro alvim": "Campos dos Goytacazes",
-    "sms-curitiba": "Curitiba",
-    "hospital s\u00edrio-liban\u00eas": "S\u00e3o Paulo",
-    "feluma": "Belo Horizonte",
-    "hospital do trabalhador": "Curitiba",
-    "hos/bos": "Sorocaba",
-    "pucpr": "Curitiba",
-    "amp": "Maring\u00e1",
-    "ufcspa": "Porto Alegre",
-    "hiae": "S\u00e3o Paulo",
-    "hnmd": "Rio de Janeiro",
-    "usp-rp": "Ribeir\u00e3o Preto",
-    "amrigs": "Porto Alegre",
-    "psu-mg": "V\u00e1rios",
-    "psu-go": "V\u00e1rios",
-    "usp-sp": "S\u00e3o Paulo",
-    "famema": "Mar\u00edlia",
-    "unifesp": "S\u00e3o Paulo",
-}
-
 
 def fetch(url):
     req = urllib.request.Request(url, headers={
@@ -197,10 +157,9 @@ def format_cell(text, primary=False, weak=False):
 
 def render_group(title, rows):
     out = [f"<tr class=\"bg-gray-100/60\">"
-           f"<td class=\"p-4 font-semibold\" colspan=\"7\">{esc(title)}</td></tr>"]
+           f"<td class=\"p-4 font-semibold\" colspan=\"6\">{esc(title)}</td></tr>"]
     for cells in rows:
         uf, selecao, edital, inscricoes, taxa, prova = cells
-        municipio = MUNICIPIOS.get(selecao.strip().lower(), "")
         is_nac = uf.upper() == "NAC" or selecao.upper() in ("ENAMED", "ENARE")
         row_cls = ("bg-camilo-primary/5 hover:bg-camilo-primary/10 transition"
                    if is_nac else "hover:bg-gray-50 transition")
@@ -209,7 +168,6 @@ def render_group(title, rows):
         out.append("<tr class=\"" + row_cls + "\">")
         out.append(f"<td class=\"p-4\">{esc(uf) or '\u2014'}</td>")
         out.append(f"<td class=\"{name_cls}\">{esc(selecao)}</td>")
-        out.append(f"<td class=\"p-4\">{esc(municipio) or '\u2014'}</td>")
         out.append(format_cell(edital, weak=edital.lower() in WEAK_VALUES or "(previs" in edital))
         out.append(format_cell(inscricoes))
         out.append(format_cell(taxa_fmt, weak=any(v in taxa_fmt.lower() for v in ("a confirmar", "aguardando"))
