@@ -900,46 +900,72 @@
                 console.log("Avisos carregados com sucesso:", avisos);
 
                 if (avisos.length > 0) {
-                    // Atualiza o Quadro de Avisos
-                    container.innerHTML = avisos.map(aviso => `
-                        <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
-                            <div class="flex justify-between text-sm text-gray-500 mb-2">
-                                <span><i class="fa-regular fa-calendar mr-1"></i> ${aviso.data}</span>
-                                <span class="text-camilo-primary font-medium">${aviso.categoria}</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">${aviso.titulo}</h3>
-                            ${aviso.countdownAtivo && aviso.countdownData ? `
-                            <div class="bg-camilo-primary/5 border border-camilo-primary/20 rounded-2xl p-5 mb-5 text-center">
-                                <p class="text-[11px] uppercase tracking-widest text-camilo-primary font-bold mb-4"><i class="fa-regular fa-hourglass-half mr-1.5"></i>${aviso.countdownLabel || 'Contagem regressiva'}</p>
-                                <div class="flex items-stretch justify-center gap-1.5 sm:gap-2" data-countdown="${aviso.countdownData}">
-                                    <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
-                                        <span class="cd-d text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
-                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">dias</span>
-                                    </div>
-                                    <span class="text-2xl font-bold text-camilo-primary/30 self-center select-none">:</span>
-                                    <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
-                                        <span class="cd-h text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
-                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">horas</span>
-                                    </div>
-                                    <span class="text-2xl font-bold text-camilo-primary/30 self-center select-none">:</span>
-                                    <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
-                                        <span class="cd-m text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
-                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">min</span>
-                                    </div>
-                                    <span class="text-2xl font-bold text-camilo-primary/30 self-center select-none">:</span>
-                                    <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
-                                        <span class="cd-s text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
-                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">seg</span>
-                                    </div>
-                                </div>
-                                <p class="cd-done hidden text-lg font-bold text-camilo-primary mt-3"><i class="fa-solid fa-star mr-1.5"></i>A data chegou!</p>
-                            </div>` : ''}
-                            <div class="aviso-content text-gray-600 mb-4 text-sm space-y-2 leading-relaxed">${aviso.mensagem}</div>
-                            ${aviso.link ? `<a href="${aviso.link}" target="_blank" class="text-camilo-secondary text-sm font-bold hover:underline">${aviso.linkTexto || 'Saiba mais'} &rarr;</a>` : ''}
-                        </div>
-                    `).join('');
+                    // Configuração do "Mostrar mais"
+                    const AVISOS_POR_PAGINA = 4;
+                    let avisosVisiveis = AVISOS_POR_PAGINA;
+                    const todosAvisos = avisos;
 
-                    initCountdowns();
+                    function renderizarAvisos() {
+                        const avisosParaMostrar = todosAvisos.slice(0, avisosVisiveis);
+                        container.innerHTML = avisosParaMostrar.map(aviso => `
+                            <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                                <div class="flex justify-between text-sm text-gray-500 mb-2">
+                                    <span><i class="fa-regular fa-calendar mr-1"></i> ${aviso.data}</span>
+                                    <span class="text-camilo-primary font-medium">${aviso.categoria}</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">${aviso.titulo}</h3>
+                                ${aviso.countdownAtivo && aviso.countdownData ? `
+                                <div class="bg-camilo-primary/5 border border-camilo-primary/20 rounded-2xl p-5 mb-5 text-center">
+                                    <p class="text-[11px] uppercase tracking-widest text-camilo-primary font-bold mb-4"><i class="fa-regular fa-hourglass-half mr-1.5"></i>${aviso.countdownLabel || 'Contagem regressiva'}</p>
+                                    <div class="flex items-stretch justify-center gap-1.5 sm:gap-2" data-countdown="${aviso.countdownData}">
+                                        <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
+                                            <span class="cd-d text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
+                                            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">dias</span>
+                                        </div>
+                                        <span class="text-2xl font-bold text-camilo-primary/30 self-center select-none">:</span>
+                                        <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
+                                            <span class="cd-h text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
+                                            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">horas</span>
+                                        </div>
+                                        <span class="text-2xl font-bold text-camilo-primary/30 self-center select-none">:</span>
+                                        <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
+                                            <span class="cd-m text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
+                                            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">min</span>
+                                        </div>
+                                        <span class="text-2xl font-bold text-camilo-primary/30 self-center select-none">:</span>
+                                        <div class="flex flex-col items-center justify-center min-w-[58px] bg-white rounded-xl shadow-sm border border-camilo-primary/10 py-3 px-2">
+                                            <span class="cd-s text-3xl font-extrabold text-camilo-primary tabular-nums leading-none">--</span>
+                                            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-medium mt-2">seg</span>
+                                        </div>
+                                    </div>
+                                    <p class="cd-done hidden text-lg font-bold text-camilo-primary mt-3"><i class="fa-solid fa-star mr-1.5"></i>A data chegou!</p>
+                                </div>` : ''}
+                                <div class="aviso-content text-gray-600 mb-4 text-sm space-y-2 leading-relaxed">${aviso.mensagem}</div>
+                                ${aviso.link ? `<a href="${aviso.link}" target="_blank" class="text-camilo-secondary text-sm font-bold hover:underline">${aviso.linkTexto || 'Saiba mais'} &rarr;</a>` : ''}
+                            </div>
+                        `).join('');
+
+                        initCountdowns();
+
+                        // Botão "Mostrar mais"
+                        if (avisosVisiveis < todosAvisos.length) {
+                            const btnContainer = document.createElement('div');
+                            btnContainer.className = 'col-span-full text-center mt-6';
+                            btnContainer.innerHTML = `
+                                <button id="btn-mostrar-mais" class="bg-camilo-primary text-white px-8 py-3 rounded-full font-medium hover:bg-camilo-primary/90 transition shadow-md">
+                                    Mostrar mais (${todosAvisos.length - avisosVisiveis} restantes)
+                                </button>
+                            `;
+                            container.appendChild(btnContainer);
+                            
+                            document.getElementById('btn-mostrar-mais').addEventListener('click', () => {
+                                avisosVisiveis = Math.min(avisosVisiveis + AVISOS_POR_PAGINA, todosAvisos.length);
+                                renderizarAvisos();
+                            });
+                        }
+                    }
+
+                    renderizarAvisos();
 
                     // Atualiza o Card de Atalho no topo com o aviso mais recente
                     const maisRecente = avisos[0];
