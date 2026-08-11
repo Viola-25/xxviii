@@ -30,6 +30,8 @@ TABELA_END = "<!-- RESIDENCIA-TABELA-END -->"
 NOTA_START = "<!-- RESIDENCIA-NOTA-START -->"
 NOTA_END = "<!-- RESIDENCIA-NOTA-END -->"
 
+# A tabela "2\u00aa Entrada Anual 2026" (provas de meio de ano, ingresso ainda
+# em 2026) nao se aplica a turma atual; renderiza-se apenas o "Ingresso 2027".
 GROUP_1 = "2\u00aa Entrada Anual 2026 (ingresso ainda em 2026)"
 GROUP_2 = "Ingresso 2027"
 
@@ -191,17 +193,29 @@ def main():
         print(f"ERRO: tabelas esperadas (2) nao encontradas (achou {len(tables)})", file=sys.stderr)
         return 1
 
+    # A tabela "Ingresso 2027" e a que contem as selecoes nacionais (ENAMED/ENARE)
+    # ou provas a partir de set/2026; a outra e a de 2a Entrada (meio de ano),
+    # que nao deve ser exibida para a turma.
+    ingress2027 = None
+    for table in tables:
+        if any(cells[0].upper() == "NAC" or cells[1].upper() in ("ENAMED", "ENARE")
+               for cells in table):
+            ingress2027 = table
+            break
+    if ingress2027 is None:
+        print("ERRO: tabela Ingresso 2027 nao encontrada", file=sys.stderr)
+        return 1
+
     body = []
-    for title, rows in ((GROUP_1, tables[0]), (GROUP_2, tables[1])):
-        filtered = []
-        for cells in rows:
-            prova = cells[5]
-            d = parse_date(prova)
-            if d is not None and d.date() <= today:
-                continue
-            filtered.append(cells)
-        if filtered:
-            body.extend(render_group(title, filtered))
+    filtered = []
+    for cells in ingress2027:
+        prova = cells[5]
+        d = parse_date(prova)
+        if d is not None and d.date() <= today:
+            continue
+        filtered.append(cells)
+    if filtered:
+        body.extend(render_group(GROUP_2, filtered))
 
     if not body:
         print("ERRO: nenhuma prova futura encontrada; nao vou sobrescrever o arquivo",
@@ -209,7 +223,8 @@ def main():
         return 1
 
     novo_tbody = "\n" + "\n".join(body) + "\n"
-    nota = (f"Somente processos com prova ainda por acontecer. Dados conforme "
+    nota = (f"Somente processos de ingresso em 2027 com prova ainda por acontecer. "
+            f"Dados conforme "
             f"<a href=\"{SOURCE_LINK}\" target=\"_blank\" "
             f"class=\"text-camilo-primary underline\">Estrat\u00e9gia MED</a> "
             f"(atualizado automaticamente em {today.strftime('%d/%m/%Y')}). "

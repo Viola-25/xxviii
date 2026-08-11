@@ -15,8 +15,11 @@ branch `main`).
 
 - Tabela gerada automaticamente pelo script (não editar o `<tbody>` à mão).
 - O script faz scraping do artigo do **Estratégia MED** (calendário de residência),
-  parseia as 2 tabelas (2ª Entrada 2026 e Ingresso 2027) e reescreve o conteúdo
+  parseia as tabelas e reescreve o conteúdo
   entre os marcadores `<!-- RESIDENCIA-TABELA-START/END -->` no `index.html`.
+- **Mostra somente a tabela "Ingresso 2027"** (identificada por conter as seleções
+  nacionais ENAMED/ENARE ou UF "NAC"). A tabela "2ª Entrada Anual 2026" (provas de
+  meio de ano, ingresso ainda em 2026) **é ignorada** — a turma entra em 2027.
 - A nota de rodapé fica entre `<!-- RESIDENCIA-NOTA-START/END -->`.
 - Filtra provas com data `<= hoje` (fuso `America/Sao_Paulo`); itens "a confirmar"
   e "previsão" sempre permanecem.
