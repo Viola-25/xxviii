@@ -394,7 +394,7 @@
                         <span class="text-sm text-gray-700 font-medium">Fim</span>
                     </div>
                 </div>
-                <a href="mapa-jantar.jpeg" target="_blank" rel="noopener" class="block mt-4 group">
+                <a href="mapa-jantar.jpeg" target="_blank" rel="noopener" class="block mt-4 group js-lightbox">
                     <img src="mapa-jantar.jpeg" alt="Mapa de mesas do Jantar de Formatura" loading="lazy"
                          class="w-full rounded-xl border border-gray-200 shadow-sm object-contain bg-white max-h-[480px] transition group-hover:shadow-md">
                     <p class="text-xs text-gray-500 mt-2 text-center md:text-left"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i>Clique para ampliar o mapa do jantar</p>
@@ -451,7 +451,7 @@
                         <span class="text-sm text-gray-700 font-medium">Fim</span>
                     </div>
                 </div>
-                <a href="mapa-baile.jpeg" target="_blank" rel="noopener" class="block mt-4 group">
+                <a href="mapa-baile.jpeg" target="_blank" rel="noopener" class="block mt-4 group js-lightbox">
                     <img src="mapa-baile.jpeg" alt="Mapa de mesas do Baile de Formatura" loading="lazy"
                          class="w-full rounded-xl border border-gray-200 shadow-sm object-contain bg-white max-h-[480px] transition group-hover:shadow-md">
                     <p class="text-xs text-gray-500 mt-2 text-center md:text-left"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i>Clique para ampliar o mapa do baile</p>
@@ -1301,6 +1301,49 @@
         // Iniciar carregamento ao abrir a página
         carregarAvisos();
         carregarForms();
+
+        // Lightbox dos mapas (amplia sem sair da página)
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCap = document.getElementById('lightbox-cap');
+
+        function fecharLightbox() {
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+            lightboxImg.src = '';
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('.js-lightbox').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const img = link.querySelector('img');
+                lightboxImg.src = link.getAttribute('href');
+                lightboxCap.textContent = img ? img.alt : '';
+                lightbox.classList.remove('hidden');
+                lightbox.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        lightbox.addEventListener('click', e => {
+            if (e.target === lightbox || e.target.closest('#lightbox-close')) fecharLightbox();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') fecharLightbox();
+        });
     </script>
+
+    <!-- Lightbox dos mapas -->
+    <div id="lightbox" class="fixed inset-0 z-[70] bg-black/90 hidden items-center justify-center p-4 sm:p-8">
+        <button type="button" id="lightbox-close" aria-label="Fechar"
+                class="absolute top-4 right-4 text-white/80 hover:text-white text-3xl p-2 rounded-full hover:bg-white/10 transition">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <figure class="max-w-full max-h-full flex flex-col items-center gap-3">
+            <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[85vh] object-contain rounded-xl bg-white shadow-2xl">
+            <figcaption id="lightbox-cap" class="text-gray-300 text-sm text-center"></figcaption>
+        </figure>
+    </div>
 </body>
 </html>
