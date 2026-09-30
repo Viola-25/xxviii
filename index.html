@@ -1307,11 +1307,27 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxCap = document.getElementById('lightbox-cap');
 
+        let lightboxScrollY = 0;
+
+        function travarScroll() {
+            lightboxScrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = -lightboxScrollY + 'px';
+            document.body.style.width = '100%';
+        }
+
+        function destravarScroll() {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, lightboxScrollY);
+        }
+
         function fecharLightbox() {
             lightbox.classList.add('hidden');
             lightbox.classList.remove('flex');
             lightboxImg.src = '';
-            document.body.style.overflow = '';
+            destravarScroll();
         }
 
         document.querySelectorAll('.js-lightbox').forEach(link => {
@@ -1320,9 +1336,9 @@
                 const img = link.querySelector('img');
                 lightboxImg.src = link.getAttribute('href');
                 lightboxCap.textContent = img ? img.alt : '';
+                travarScroll();
                 lightbox.classList.remove('hidden');
                 lightbox.classList.add('flex');
-                document.body.style.overflow = 'hidden';
             });
         });
 
@@ -1330,7 +1346,7 @@
             if (e.target === lightbox || e.target.closest('#lightbox-close')) fecharLightbox();
         });
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') fecharLightbox();
+            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) fecharLightbox();
         });
     </script>
 
@@ -1340,8 +1356,8 @@
                 class="absolute top-4 right-4 text-white/80 hover:text-white text-3xl p-2 rounded-full hover:bg-white/10 transition">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        <figure class="max-w-full max-h-full flex flex-col items-center gap-3">
-            <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[85vh] object-contain rounded-xl bg-white shadow-2xl">
+        <figure class="max-w-full max-h-full flex flex-col items-center gap-3 pointer-events-none">
+            <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[85vh] object-contain rounded-xl bg-white shadow-2xl pointer-events-auto touch-pinch-zoom">
             <figcaption id="lightbox-cap" class="text-gray-300 text-sm text-center"></figcaption>
         </figure>
     </div>
