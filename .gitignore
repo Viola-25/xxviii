@@ -1,6 +1,9 @@
 # __pycache__
 __pycache__/
 
+# Artes de Instagram (geradas por scripts/generate-stories.py)
+stories/
+
 # Credenciais locais (nunca versionar)
 AGENTS.local.md
 
